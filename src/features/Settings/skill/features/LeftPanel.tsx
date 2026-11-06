@@ -21,7 +21,6 @@ import { openImportFromUrlModal } from '@/features/SkillStore/SkillList/ImportFr
 import { openUploadSkillModal } from '@/features/SkillStore/SkillList/UploadSkillModal';
 import { useConnectorManageable } from '@/hooks/useConnectorManagePolicy';
 
-import SettingsHeaderActions from '../../features/SettingsHeaderActions';
 import ConnectorManagePolicy from './ConnectorManagePolicy';
 import { type ToolDetailType } from './SkillDetail';
 import SkillList, { type SkillViewMode } from './SkillList';
@@ -39,7 +38,12 @@ const styles = createStaticStyles(({ css, cssVar }) => ({
     padding-inline: 0;
   `,
   pageHeader: css`
+    display: flex;
     flex-shrink: 0;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+
     padding-block: 24px 4px;
     padding-inline: 12px;
   `,
@@ -100,14 +104,15 @@ const LeftPanel = memo<LeftPanelProps>(
     if (isConnectorPage)
       return (
         <SkillListVariantProvider value={'page'}>
-          {/* The shared settings header carries the title and these page actions. */}
-          <SettingsHeaderActions>
+          {/* The shared navigation header carries the title; the page actions
+              share the intro row so they line up with the list below. */}
+          <div className={styles.pageHeader}>
+            <Text type={'secondary'}>{t('skillView.connectorsDesc')}</Text>
             <Flexbox horizontal flex={'none'} gap={8}>
               <Tooltip title={t('skillStore.title')}>
                 <Button
                   aria-label={t('skillStore.title')}
                   icon={<Icon icon={Store} />}
-                  size={'small'}
                   onClick={handleOpenStore}
                 />
               </Tooltip>
@@ -123,7 +128,6 @@ const LeftPanel = memo<LeftPanelProps>(
                   <Button
                     disabled={!canAddConnector}
                     icon={Grid2x2Plus}
-                    size={'small'}
                     onClick={() => setShowAddConnector(true)}
                   >
                     {addConnectorTitle}
@@ -131,9 +135,6 @@ const LeftPanel = memo<LeftPanelProps>(
                 </span>
               </Tooltip>
             </Flexbox>
-          </SettingsHeaderActions>
-          <div className={styles.pageHeader}>
-            <Text type={'secondary'}>{t('skillView.connectorsDesc')}</Text>
           </div>
           <ConnectorManagePolicy variant={'page'} />
           <div className={styles.pageBody}>
